@@ -17,7 +17,17 @@ router.get('/', function (req, res, next) {
 });
 
 /**
- * google login
+ * To get users fuel points
+ */
+router.get('/getFuelPoints', authCheck, (req, res, next) => {
+	USER
+		.findOne({_id: req.user._id, isDeleted: false})
+		.then(data => res.json({"FuelPoints": data.FuelPoints}))
+		.catch(err => res.status(500).json(getErrorResponse("Something went wrong while getting FuelPoints")));
+});
+
+/**
+ * Api for google login
  */
 router.post('/login', async (req, res, next) => {
   const validationSchema = Joi.object(
@@ -59,12 +69,5 @@ router.post('/login', async (req, res, next) => {
     res.json({user: socialUser, token: token})
   }
 });
-
-router.get('/addCampaign', authCheck,  async (req, res, next) => {
-  console.log("add  cccc");
-  console.log("user---- :: ", req.user);
-  return res.send("Enter---")
-});
-
 
 module.exports = router;

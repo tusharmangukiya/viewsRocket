@@ -16,7 +16,7 @@ const campaignSchema = new Schema({
     cost                    :  { type: Number, default: 0 },
     isCompleted             :  { type: Boolean, default: false },
     actualViewcount         :  { type: Number, default: 0 },
-    status                  :  { type: Boolean, default: false }
+    status                  :  { type: Boolean, default: true }
 },
 {
     timestamps: true
