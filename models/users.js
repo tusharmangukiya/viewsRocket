@@ -18,10 +18,10 @@ const userSchema = new Schema({
     isPremiumUser   :  { type: Boolean, default: false },
     isAdsFreeUser   :  { type: Boolean, default: false },
     FuelPoints      :  { type: Number, default: 0 },
-    pointsEarned      :  { type: Number, default: 0 },
-    pointsSpent      :  { type: Number, default: 0 },
-    referralsMade      :  { type: Number, default: 0 },
-    viewsGained      :  { type: Number, default: 0 },
+    pointsEarned    :  { type: Number, default: 0 },
+    pointsSpent     :  { type: Number, default: 0 },
+    referralsMade   :  { type: Number, default: 0 },
+    viewsGained     :  { type: Number, default: 0 },
     isDeleted       :  { type: Boolean, default: false }
 },
 {

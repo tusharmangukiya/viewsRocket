@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { mongooseUri } = require("../config");
 
 const connect = async () => {
     const options = {
@@ -11,10 +10,10 @@ const connect = async () => {
     };
 
     try {
-        await mongoose.connect(mongooseUri, options);
+        await mongoose.connect("mongodb://127.0.0.1:27017/viewsRocket", options);
         console.log("\x1b[32m%s\x1b[0m", "Database connected...");
     } catch (err) {
-        console.error("Error while connecting database\n", error);
+        console.error("Error while connecting database\n", err);
     }
 };
 

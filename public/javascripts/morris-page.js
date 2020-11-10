@@ -125,9 +125,7 @@ $("a[name='loadTabContent']").click(function(e){
 		var self = $(this).context;
 		var tabId = $(this).attr('data-id');
 		var tabTitle = $(this).attr('title');
-    var tabSrc = "/"+$(this).attr('data-src');
-    console.log("-========tabId============\n", tabId);
-
+		var tabSrc = "/"+$(this).attr('data-src');
 		//pageNum++;
 
 		/* check tab existence */

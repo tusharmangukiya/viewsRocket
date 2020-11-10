@@ -1,5 +1,4 @@
-const {validIdPattern} = require("../common");
-const passport = require('passport');
+const common = require("../common");
 
 var getErrorResponse = (err) => {
 	return {
@@ -7,8 +6,6 @@ var getErrorResponse = (err) => {
 		error: err
 	}
 }
-
-var authCheck = passport.authenticate('jwt', { session: false });
 
 var getSuccessResponse = (respObject) => {
 	return {
@@ -32,11 +29,11 @@ var removeFields = (obj, keys, removeBasicFields = true) => {
 
 var isValidId = (id) => {
 	id = id.toString();
-	return id.match(validIdPattern) != null;
+	return id.match(common.validIdPattern) != null;
 }
 
 module.exports = {
 	getErrorResponse,
     getSuccessResponse,
-    removeFields, isValidId, authCheck
+    removeFields, isValidId
 };

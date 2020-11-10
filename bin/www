@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require('dotenv').config();
+
 /**
  * Module dependencies.
  */
@@ -87,5 +87,4 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log(`Sever is running on port :${addr.port}`);
 }
