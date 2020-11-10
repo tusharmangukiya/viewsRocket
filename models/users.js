@@ -14,7 +14,7 @@ const userSchema = new Schema({
     image           :  { type: String, default: null },
     socialId        :  { type: String, default: null },
     deviceId        :  { type: String, default: null },
-    referrerUserId  :  { type: ObjectId, ref: 'user'},
+    referrerUserId  :  { type: ObjectId, ref: 'user', default: null},
     isPremiumUser   :  { type: Boolean, default: false },
     isAdsFreeUser   :  { type: Boolean, default: false },
     FuelPoints      :  { type: Number, default: 0 },

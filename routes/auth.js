@@ -45,13 +45,13 @@ router.post('/login', async (req, res, next) => {
       .save()
       .then(data => {
         const body = { _id : data._id, email : data.email };
-        const token = jwt.sign({ user : body }, secretKeys.passport);
+        const token = jwt.sign({ user : body }, "SSDSJDJSBNBN");
         res.json({user: data, token: token})
       })
       .catch(err => res.status(500).json(getErrorResponse(err.message ? err.message : "Something went wrong while inserting new user")));
   } else {
     const body = { _id : socialUser._id, email : socialUser.email };
-    const token = jwt.sign({ user : body }, secretKeys.passport);
+    const token = jwt.sign({ user : body }, "SSDSJDJSBNBN");
     res.json({user: socialUser, token: token})
   }
 });
