@@ -1,4 +1,5 @@
 const common = require("../common");
+const passport = require('passport');
 
 var getErrorResponse = (err) => {
 	return {
@@ -6,6 +7,8 @@ var getErrorResponse = (err) => {
 		error: err
 	}
 }
+
+var authCheck = passport.authenticate('jwt', { session: false });
 
 var getSuccessResponse = (respObject) => {
 	return {
@@ -35,5 +38,5 @@ var isValidId = (id) => {
 module.exports = {
 	getErrorResponse,
     getSuccessResponse,
-    removeFields, isValidId
+    removeFields, isValidId, authCheck
 };

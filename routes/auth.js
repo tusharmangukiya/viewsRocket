@@ -40,6 +40,9 @@ router.post('/login', async (req, res, next) => {
   socialUser = await USER.findOne({ socialId: payload.socialId, isDeleted : false });
   
   if(!socialUser){
+    console.log("=======if-------");
+    payload.FuelPoints = 500;
+    console.log("=====point====", payload.FuelPoints);
     var user = new USER(payload);
     user
       .save()
@@ -50,10 +53,18 @@ router.post('/login', async (req, res, next) => {
       })
       .catch(err => res.status(500).json(getErrorResponse(err.message ? err.message : "Something went wrong while inserting new user")));
   } else {
+    console.log("====else-----");
     const body = { _id : socialUser._id, email : socialUser.email };
     const token = jwt.sign({ user : body }, "SSDSJDJSBNBN");
     res.json({user: socialUser, token: token})
   }
 });
+
+router.get('/addCampaign', authCheck,  async (req, res, next) => {
+  console.log("add  cccc");
+  console.log("user---- :: ", req.user);
+  return res.send("Enter---")
+});
+
 
 module.exports = router;

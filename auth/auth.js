@@ -32,7 +32,8 @@ passport.use(new JWTstrategy({
   secretOrKey : 'SSDSJDJSBNBN',
   jwtFromRequest : ExtractJWT.fromAuthHeaderAsBearerToken()
 }, function(jwt_payload, done) {
-  User.findOne({id: jwt_payload.sub}, function(err, user) {
+  console.log("======jwt_payload==== :: ", jwt_payload);
+  User.findOne({_id: jwt_payload.user._id}, function(err, user) {
       if (err) {
           return done({"error": "Invalid token"}, false);
       }
