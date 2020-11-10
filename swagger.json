@@ -1,0 +1,150 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Utility Bill Reminder App API",
+    "description": "Node.js and Express.js Application API",
+    "license": {
+      "name": "Utility Bill Reminder App"
+    }
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "API for add users in the system"
+    },
+    {
+      "name": "User login",
+      "description": "API for login user in the app"
+    },
+    {
+      "name": "Service category",
+      "description": "API for service category and tags in the app"
+    }
+  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+
+  "securityDefinitions": {
+    "jwt": {
+      "description": "JWT token format : Bearer [JWT token] ",
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "jwt": []
+    }
+  ],
+    
+    "/login": {
+      "post": {
+        "tags": ["User login"],
+        "description": "User social login into system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to social login",
+            "schema": {
+              "$ref": "#/definitions/SocialLogin"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User social login response",
+            "schema": {
+              "$ref": "#/definitions/SocialLogin"
+            }
+          }
+        }
+      }
+    },
+    "/forgotPassword": {
+      "post": {
+        "tags": ["User login"],
+        "description": "Forgot Password",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Forgot Password",
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Forgot Password"
+          }
+        }
+      }
+  },
+  "definitions": {
+    
+    "SocialLogin": {
+      "required": ["email", "name"],
+      "properties": {
+        "facebookId": {
+          "type": "string",
+          "description": "Pass facebook id while login with facebook."
+        },
+        "googleId": {
+          "type": "string",
+          "description": "Pass google id while login with google."
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profilePicture": {
+          "type": "string"
+        },
+        "deviceOsVersion": {
+          "type": "string"
+        },
+        "deviceOsName": {
+          "type": "string"
+        },
+        "brandName": {
+          "type": "string"
+        },
+        "applicationBuildNumber": {
+          "type": "string"
+        },
+        "deviceId": {
+          "type": "string"
+        },
+        "deviceType": {
+          "type": "string"
+        },
+        "deviceName": {
+          "type": "string"
+        },
+        "deviceToken": {
+          "type": "string"
+        },
+        "deviceManufacture": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

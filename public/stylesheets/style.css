@@ -1,0 +1,18 @@
+.btn {
+  border-radius: unset;
+  box-shadow: 5px 5px 10px #cfcfcf;
+}
+
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn:active:focus,
+.btn:focus {
+  outline: none;
+  outline-offset: unset;
+}
+
+.login-panel {
+  border-radius : 0px;
+}
