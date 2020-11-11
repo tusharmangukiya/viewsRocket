@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const Joi = require('@hapi/joi');
 const { getSuccessResponse, getErrorResponse, isValidId, authCheck, removeFields } = require('../utils/helper');
 const { secretKeys } = require('../config');
-const { validIdPattern } = require("../common");
+const { validIdPattern, youTubeURLPattern } = require("../common");
 
 // Models Import
 const CAMPAIGN = require('../models/campaign');
@@ -14,7 +14,7 @@ const CAMPAIGN = require('../models/campaign');
 /**
  * To get all active campaign
  */
-router.get('/', authCheck, (req, res, next) => {
+router.get('/active', authCheck, (req, res, next) => {
 	CAMPAIGN
 		.find({status: true})
 		.then(data => res.json(getSuccessResponse(data)))
@@ -24,7 +24,7 @@ router.get('/', authCheck, (req, res, next) => {
 /**
  * To get all InActive campaign
  */
-router.get('/', authCheck, (req, res, next) => {
+router.get('/inactive', authCheck, (req, res, next) => {
 	CAMPAIGN
 		.find({status: false})
 		.then(data => res.json(getSuccessResponse(data)))
@@ -40,7 +40,7 @@ router.get('/:campaignId', authCheck, (req, res, next) => {
 		return res.status(404).json(getErrorResponse("No record where found by this id"));
 	}
 	CAMPAIGN
-		.find({ _id: campaignId, status: false})
+		.findById(campaignId)
 		.then(data => res.json(getSuccessResponse(data)))
 		.catch(err => res.status(500).json(getErrorResponse("Something went wrong while users campaign")));
 });
@@ -51,15 +51,18 @@ router.get('/:campaignId', authCheck, (req, res, next) => {
 router.post('/', authCheck,  async (req, res, next) => {
   const validationSchema = Joi.object(
     {
-      videoURL: Joi.string().optional().allow("").allow(null),
-      videoId: Joi.string().optional().allow("").allow(null),
-      desiredViewcount: Joi.number().optional().allow("").allow(null), 
-      desiredViewduration: Joi.number().optional().allow("").allow(null),
-      cost: Joi.number().optional().allow("").allow(null),
+      videoURL: Joi.string().pattern(new RegExp(youTubeURLPattern)).required(),
+      videoId: Joi.string().required(),
+      desiredViewcount: Joi.number().required(), 
+      desiredViewduration: Joi.number().required(),
+      cost: Joi.number().equal(req.body.desiredViewcount*req.body.desiredViewduration).required()
   });
   var validation = validationSchema.validate(req.body);
   if (validation.error)
     return res.status(422).json(getErrorResponse(validation.error.details[0].message));
+
+    // Check whether the URL is validated or not (create separate table to mantain URL validation recoord)
+    // If everything goes well then only create new campaign otherwise return error
 
   var payload = validation.value;
   payload.user = req.user._id;
@@ -76,7 +79,7 @@ router.post('/', authCheck,  async (req, res, next) => {
  * Api for stop campaign
  */
 router.post('/stopCampaign', authCheck,  async (req, res, next) => {
-    var campaignId = req.body.campaignId;
+  var campaignId = req.body.campaignId;
 	if (!isValidId(campaignId)) return res.status(422).json(getErrorResponse("Invalid campaign id given"));
 
 	CAMPAIGN.updateOne({ _id: campaignId }, { status: false })

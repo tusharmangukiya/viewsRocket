@@ -32,12 +32,12 @@ router.get('/getFuelPoints', authCheck, (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   const validationSchema = Joi.object(
     {
-      email: Joi.string().optional().allow("").allow(null),
+      email: Joi.string().required(),
       phone: Joi.string().optional().allow("").allow(null),
-      name: Joi.string().optional().allow("").allow(null), 
+      name: Joi.string().required(), 
       image: Joi.string().optional().allow("").allow(null),
-      socialId: Joi.string().optional().allow("").allow(null),
-      deviceId: Joi.string().optional().allow("").allow(null),
+      socialId: Joi.string().required(),
+      deviceId: Joi.string().required(),
       ReferrerUserId: Joi.string().regex(common.validIdPattern).optional().allow("").allow(null)
   });
 
@@ -50,9 +50,7 @@ router.post('/login', async (req, res, next) => {
   socialUser = await USER.findOne({ socialId: payload.socialId, isDeleted : false });
   
   if(!socialUser){
-    console.log("=======if-------");
     payload.FuelPoints = 500;
-    console.log("=====point====", payload.FuelPoints);
     var user = new USER(payload);
     user
       .save()
@@ -63,7 +61,6 @@ router.post('/login', async (req, res, next) => {
       })
       .catch(err => res.status(500).json(getErrorResponse(err.message ? err.message : "Something went wrong while inserting new user")));
   } else {
-    console.log("====else-----");
     const body = { _id : socialUser._id, email : socialUser.email };
     const token = jwt.sign({ user : body }, "SSDSJDJSBNBN");
     res.json({user: socialUser, token: token})

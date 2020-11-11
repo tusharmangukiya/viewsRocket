@@ -8,12 +8,12 @@ const config = require('../config');
  * Collection Name: users
  */
 const userSchema = new Schema({
-    name            :  { type: String, default: null },
-    email           :  { type: String, default: null },
+    name            :  { type: String, required: true },
+    email           :  { type: String, required: true },
     phone           :  { type: String, default: null },
     image           :  { type: String, default: null },
-    socialId        :  { type: String, default: null },
-    deviceId        :  { type: String, default: null },
+    socialId        :  { type: String, required: true },
+    deviceId        :  { type: String, required: true },
     referrerUserId  :  { type: ObjectId, ref: 'user', default: null},
     isPremiumUser   :  { type: Boolean, default: false },
     isAdsFreeUser   :  { type: Boolean, default: false },

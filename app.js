@@ -12,8 +12,8 @@ const { getSuccessResponse, getErrorResponse, removeFields, isValidId } = requir
 var app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', "pub");
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', "ejs");
 const routes= require('./routes');
 const config = require('./config');
 
@@ -26,7 +26,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/static',express.static(path.join(__dirname, 'public')));
 app.use('/lib',express.static(path.join(__dirname, 'node_modules')));
 DATABASE.connect();
@@ -35,18 +35,16 @@ DATABASE.connect();
 app.use('/', routes);
 
 // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
+app.use(function(req, res, next) {
+  next(createError(404));
+});
 
 // Handle invalid JWT
 app.use(function(err, req, res, next) {
-  console.log("======errr======", err);
   if (err.constructor.name === 'UnauthorizedError') {
     const bearerHeader = req.headers['authorization'];  // Get auth header value
     if(typeof bearerHeader !== 'undefined') { // Check if bearer is undefined
       // Unauthorized
-      console.log("========unnnn========");
       res.status(401).send(getErrorResponse("Invalid token given!"));
     } else {
       // Forbidden
