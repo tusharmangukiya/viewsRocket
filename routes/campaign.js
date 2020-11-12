@@ -10,6 +10,7 @@ const { validIdPattern, youTubeURLPattern } = require("../common");
 
 // Models Import
 const CAMPAIGN = require('../models/campaign');
+const USER = require('../models/users');
 
 /**
  * To get all active campaign
@@ -87,4 +88,45 @@ router.post('/stopCampaign', authCheck,  async (req, res, next) => {
     .catch(err => res.status(500).json(getErrorResponse("Something went wrong while stop campaign")));
 });
 
+/**
+ * Api for stop campaign
+ */
+router.put('/:campaignId', authCheck, async (req, res, next) => {
+  var campaignId =  req.params.campaignId;
+	if(!isValidId(campaignId)){
+		return res.status(404).json(getErrorResponse("Invalid Campaign ID"));
+  }
+  
+  var campaign = await CAMPAIGN.findOne({_id: campaignId, isCompleted: false, status: true}).populate('user');
+  if(campaign){
+    if(campaign.user._id.toString() == req.user._id) {
+      return res.status(400).json(getErrorResponse("You cannot load your own video"));
+    }
+    if(campaign.actualViewcount >= campaign.desiredViewcount) {
+      return res.status(400).json(getErrorResponse("Campaign is completed"));
+    } else {
+      campaign.actualViewcount += 1;
+      campaign.pointSpent += campaign.desiredViewduration;
+      var host = campaign.user;
+      host.pointsSpent += campaign.desiredViewduration;
+      host.viewsGained += 1;
+      host.save();
+      campaign.save(async (err, data) => {
+        if(err) {
+          console.log("ERROR OCCURED :\n",err);
+          return res.status(500).json(getErrorResponse("Something went wrong while updating campaign"));
+        }
+        var viewer = await USER.findOne({_id: req.user._id, isDeleted: false});
+        if(viewer) {
+          viewer.FuelPoints += data.desiredViewduration;
+          viewer.pointsEarned += data.desiredViewduration;
+          viewer.save();
+        }
+        return res.json(getSuccessResponse("Campaign updated successfully"))
+      });
+    }
+  } else {
+    return res.status(404).json(getErrorResponse("No record where found by this id"));
+  }
+});
 module.exports = router;
