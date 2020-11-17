@@ -12,8 +12,7 @@ const common = require("../common");
 const USER = require('../models/users');
 
 router.get('/', function (req, res, next) {
-  console.log("==========docs");
-  return res.send("OK")
+  res.redirect("/api-docs");
 });
 
 /**

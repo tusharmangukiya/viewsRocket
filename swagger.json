@@ -2,24 +2,20 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Utility Bill Reminder App API",
+    "title": "Views Rocket App API",
     "description": "Node.js and Express.js Application API",
     "license": {
-      "name": "Utility Bill Reminder App"
+      "name": "Views rocket App"
     }
   },
   "tags": [
     {
-      "name": "User",
-      "description": "API for add users in the system"
-    },
-    {
-      "name": "User login",
+      "name": "Google login",
       "description": "API for login user in the app"
     },
     {
-      "name": "Service category",
-      "description": "API for service category and tags in the app"
+      "name": "Campaign",
+      "description": "API for create campaign in the app"
     }
   ],
   "consumes": ["application/json"],
@@ -38,111 +34,277 @@
       "jwt": []
     }
   ],
-    
+  "paths": {
     "/login": {
       "post": {
-        "tags": ["User login"],
-        "description": "User social login into system",
+        "tags": ["Google login"],
+        "description": "Google log in for user",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "User that we want to social login",
+            "description": "User that we want to google login",
             "schema": {
-              "$ref": "#/definitions/SocialLogin"
+              "$ref": "#/definitions/Login"
             }
           }
         ],
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "User social login response",
+            "description": "User log in response",
             "schema": {
-              "$ref": "#/definitions/SocialLogin"
+              "$ref": "#/definitions/Login"
             }
           }
         }
       }
     },
-    "/forgotPassword": {
+    "/getFuelPoints": {
+      "get": {
+        "tags": ["Get Fuel Points"],
+        "summary": "Get users Fuel Points",
+        "responses": {
+          "200": {
+            "description": "Tree structured JSON formatted response for get Fuel Points"
+          }
+        }
+      }
+    },
+    "/campaign": {
       "post": {
-        "tags": ["User login"],
-        "description": "Forgot Password",
+        "tags": ["Campaign"],
+        "description": "Api for create Campaign in app",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "Forgot Password",
+            "description": "User that we want to create Campaign",
             "schema": {
-              "allOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string"
-                    }
-                  }
-                }
-              ]
+              "$ref": "#/definitions/Campaign"
             }
           }
         ],
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "Forgot Password"
+            "description": "User log in response",
+            "schema": {
+              "$ref": "#/definitions/Campaign"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Campaign"],
+        "summary": "Get all Campaign",
+        "responses": {
+          "200": {
+            "description": "Tree structured JSON formatted response for Campaign"
           }
         }
       }
+    },
+    "/campaign/active": {
+      "get": {
+        "tags": ["Campaign"],
+        "summary": "Get all active campaign",
+        "responses": {
+          "200": {
+            "description": "Tree structured JSON formatted response for Campaign"
+          }
+        }
+      }
+    },
+    "/campaign/inactive": {
+      "get": {
+        "tags": ["Campaign"],
+        "summary": "Get all inactive campaign",
+        "responses": {
+          "200": {
+            "description": "Tree structured JSON formatted response for Campaign"
+          }
+        }
+      }
+    },
+    "/campaign/stopCampaign": {
+      "post": {
+        "tags": ["Campaign"],
+        "description": "Api for stop Campaign in app",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to stop Campaign",
+            "schema": {
+              "$ref": "#/definitions/stopCampaign"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "stop Campaign response",
+            "schema": {
+              "$ref": "#/definitions/stopCampaign"
+            }
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}": {
+      "put": {
+        "summary": "Update campaign with give ID",
+        "tags": ["Campaign"],
+        "responses": {
+          "200": {
+            "description": "sub category is updated"
+          }
+        }
+      }
+    },
+    "/feedback": {
+      "post": {
+        "tags": ["Feedback"],
+        "description": "Api for create feedback in app",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create feedback",
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "feedback response",
+            "schema": {
+              "$ref": "#/definitions/Feedback"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Feedback"],
+        "summary": "Get all feedbacks",
+        "responses": {
+          "200": {
+            "description": "Tree structured JSON formatted response for feedback"
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "post": {
+        "tags": ["Transactions"],
+        "description": "Api for create transactions in app",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create transactions",
+            "schema": {
+              "$ref": "#/definitions/Transactions"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "transactions response",
+            "schema": {
+              "$ref": "#/definitions/Transactions"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get all transactions",
+        "responses": {
+          "200": {
+            "description": "Tree structured JSON formatted response for transactions"
+          }
+        }
+      }
+    }
   },
   "definitions": {
-    
-    "SocialLogin": {
-      "required": ["email", "name"],
+    "Login": {
+      "required": ["email", "socialId"],
       "properties": {
-        "facebookId": {
-          "type": "string",
-          "description": "Pass facebook id while login with facebook."
+        "email": {
+          "type": "string"
         },
-        "googleId": {
-          "type": "string",
-          "description": "Pass google id while login with google."
+        "phone": {
+          "type": "string"
         },
         "name": {
           "type": "string"
         },
-        "email": {
+        "image": {
           "type": "string"
         },
-        "profilePicture": {
-          "type": "string"
-        },
-        "deviceOsVersion": {
-          "type": "string"
-        },
-        "deviceOsName": {
-          "type": "string"
-        },
-        "brandName": {
-          "type": "string"
-        },
-        "applicationBuildNumber": {
+        "socialId": {
           "type": "string"
         },
         "deviceId": {
           "type": "string"
         },
-        "deviceType": {
+        "ReferrerUserId": {
+          "type": "string"
+        }
+      }
+    },
+    "Campaign": {
+      "required": ["videoURL", "desiredViewcount","desiredViewduration","cost"],
+      "properties": {
+        "videoURL": {
           "type": "string"
         },
-        "deviceName": {
+        "desiredViewcount": {
+          "type": "number"
+        },
+        "desiredViewduration": {
+          "type": "number",
+          "description": "How many seconds you want"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Must be Grater then equal to desiredView * Viewduration"
+        }
+      }
+    },
+    "stopCampaign": {
+      "required": ["campaignId"],
+      "properties": {
+        "campaignId": {
+          "type": "string"
+        }
+      }
+    },
+    "Feedback": {
+      "required": ["feedbackType","message"],
+      "properties": {
+        "feedbackType": {
           "type": "string"
         },
-        "deviceToken": {
+        "message": {
           "type": "string"
+        }
+      }
+    },
+    "Transactions": {
+      "required": ["fpPurchase","transactionID"],
+      "properties": {
+        "fpPurchase": {
+          "type": "number"
         },
-        "deviceManufacture": {
-          "type": "string"
+        "message": {
+          "transactionID": "string"
         }
       }
     }

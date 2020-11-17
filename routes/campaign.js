@@ -122,8 +122,11 @@ router.put('/:campaignId', authCheck, async (req, res, next) => {
     if(campaign.user._id.toString() == req.user._id) {
       return res.status(400).json(getErrorResponse("You cannot load your own video"));
     }
-    if(campaign.actualViewcount >= campaign.desiredViewcount) {
-      return res.status(400).json(getErrorResponse("Campaign is completed"));
+    if(campaign.actualViewcount == campaign.desiredViewcount) {
+      campaign.isCompleted = true;
+      campaign.status = false;
+      campaign.save();
+      return res.json(getSuccessResponse("Campaign updated successfully"))
     } else {
       campaign.actualViewcount += 1;
       campaign.pointSpent += campaign.desiredViewduration;
@@ -167,7 +170,7 @@ function validUrl(Uurl) {
   } 
 
   var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&key=AIzaSyDZb2COifa-7W3hAfhYhm2wydso-0sIty8&id='+id;
-  console.log("====url===", url);
+  
   var data = axios.get(url)
   .then(response => {
     return response.data.items
