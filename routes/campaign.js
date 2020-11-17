@@ -72,6 +72,15 @@ router.post('/', authCheck,  async (req, res, next) => {
 
   payload.videoId = youTubeData[0].id;
   
+  user = req.user;
+  console.log(user.FuelPoints);
+    
+  if(payload.cost >= user.FuelPoints)
+    return res.status(422).json(getErrorResponse("You Don't have an sufficient FuelPoints for create this campaign, Please purchare FuelPoints for create new campaign"));
+
+  user.FuelPoints = user.FuelPoints - payload.cost;
+  user.save()
+  
   var campaign = new CAMPAIGN(payload);
   campaign
       .save()
@@ -86,6 +95,12 @@ router.post('/', authCheck,  async (req, res, next) => {
  */
 router.post('/stopCampaign', authCheck,  async (req, res, next) => {
   var campaignId = req.body.campaignId;
+  var campaign = await CAMPAIGN.findOne({_id: campaignId, isCompleted: false, status: true}).populate('user');
+  if (campaign.pointSpent <= campaign.cost)
+    refundableFP = campaign.cost - campaign.pointSpent;
+    user = req.user;
+    user.FuelPoints += refundableFP;
+    user.save(); 
 	if (!isValidId(campaignId)) return res.status(422).json(getErrorResponse("Invalid campaign id given"));
 
 	CAMPAIGN.updateOne({ _id: campaignId }, { status: false })
@@ -94,7 +109,7 @@ router.post('/stopCampaign', authCheck,  async (req, res, next) => {
 });
 
 /**
- * Api for stop campaign
+ * Api for edit campaign
  */
 router.put('/:campaignId', authCheck, async (req, res, next) => {
   var campaignId =  req.params.campaignId;
